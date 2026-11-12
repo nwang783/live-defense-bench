@@ -1,0 +1,10 @@
+# Optional Blaxel backend: a sandbox template for your own Blaxel account. From this folder:
+#   bl deploy --config blaxel.toml --yes --wait
+# Blaxel builds the image from range/Dockerfile (its default target, `blaxel`, amd64). Then pass the image tag
+# that it made (`bl get images`) with --image or KL_BLAXEL_IMAGE_V2 in .env.
+type = "sandbox"
+name = "live-defense-bench-range"
+
+[runtime]
+generation = "mk3"
+memory = 4096

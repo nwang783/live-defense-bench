@@ -1,0 +1,10 @@
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# Database dump and copy to the offsite box
+17 * * * *   root  /usr/local/sbin/offsite-backup >> /var/log/offsite-backup.log 2>&1
+# WordPress scheduled tasks
+*/5 * * * *  www-data  cd /var/www/larkspur && php wp-cron.php >/dev/null 2>&1
+# Shop numbers for node_exporter (textfile collector)
+*/2 * * * *  root  /usr/local/sbin/larkspur-metrics
+# Clear expired WordPress transients
+*/10 * * * * www-data  cd /var/www/larkspur && /usr/local/bin/wp transient delete --expired --quiet >/dev/null 2>&1

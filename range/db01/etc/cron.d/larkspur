@@ -1,0 +1,8 @@
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# Dump the databases and push the archive to ci-01
+*/10 * * * *  root  /usr/local/sbin/larkspur-dbdump >> /var/log/larkspur-dbdump.log 2>&1
+# Settle the invoices the gateway paid and count what is open
+*/15 * * * *  root  /usr/local/sbin/larkspur-invoices >> /var/log/larkspur-invoices.log 2>&1
+# Old binary logs
+7 3 * * *     root  find /var/log/mysql -name 'mysql-bin.*' -mtime +7 -delete

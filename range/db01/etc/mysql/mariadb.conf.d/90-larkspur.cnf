@@ -1,0 +1,11 @@
+[mysqld]
+bind-address = 0.0.0.0
+skip-name-resolve
+innodb_buffer_pool_size = 128M
+max_connections = 60
+performance_schema = OFF
+# Where the server may read and write files. The dump job's own folder, so that the shop's archives can be
+# written from SQL as they always have been, and nothing else: with it empty, the site's account (which has
+# the FILE right while dbgrants is armed) could read any file on this host from web-01, this host's own
+# machine-id among them, and that is the proof of presence.
+secure_file_priv = /var/backups/larkspur

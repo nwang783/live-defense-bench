@@ -1,0 +1,10 @@
+#!/bin/sh
+# Release step run by CI after it pushes theme and plugin changes: fix modes, clear caches, reload PHP.
+set -eu
+cd /var/www/larkspur
+chown -R deploy:www-data wp-content/themes
+chown -R www-data:www-data wp-content/uploads
+sudo -u www-data wp --path=/var/www/larkspur cache flush >/dev/null 2>&1 || true
+service php8.2-fpm reload >/dev/null
+logger -t larkspur-deploy "release ${1:-manual} done"
+echo "release ${1:-manual} done"

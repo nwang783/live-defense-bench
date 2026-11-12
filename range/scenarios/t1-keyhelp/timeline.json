@@ -1,0 +1,12 @@
+{
+ "notes": "One local step keeps the replay runner busy. Nothing reaches a company host.",
+ "steps": [
+  {
+   "at": 60,
+   "source": "intruder.0",
+   "label": "local check of the replay clock",
+   "timeout": 30,
+   "run": "test -r /etc/os-release"
+  }
+ ]
+}

@@ -1,0 +1,6 @@
+#!/bin/sh
+# Push the shop's uploads to the offsite box (Hetzner storage box, Maria's account). The database dump
+# moved to db-01 when the database did; this job only carries what is on this host now.
+set -u
+rsync -az --delete -e "ssh -F /root/.ssh/config" /var/www/larkspur/wp-content/uploads/ backup:web-01/uploads/ \
+  && echo "$(date -Is) offsite ok" || echo "$(date -Is) offsite FAILED (exit $?)"

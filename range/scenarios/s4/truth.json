@@ -1,0 +1,70 @@
+{
+  "intruder": {
+    "addresses": [
+      "{intruder.0}",
+      "{intruder.1}"
+    ]
+  },
+  "accounts": [
+    {
+      "host": "web-01",
+      "user": "nvega"
+    },
+    {
+      "host": "db-01",
+      "user": "nvega"
+    },
+    {
+      "host": "ci-01",
+      "user": "nvega"
+    }
+  ],
+  "hosts": [
+    "web-01",
+    "db-01",
+    "ci-01"
+  ],
+  "ways_in": [
+    {
+      "id": "nico-key-web-01",
+      "kind": "key",
+      "host": "web-01",
+      "user": "nvega",
+      "comment": "nico@nv-x13",
+      "private_key": "/root/.replay/kn"
+    },
+    {
+      "id": "nico-key-db-01",
+      "kind": "key",
+      "host": "db-01",
+      "user": "nvega",
+      "comment": "nico@nv-x13",
+      "private_key": "/root/.replay/kn"
+    },
+    {
+      "id": "nico-key-ci-01",
+      "kind": "key",
+      "host": "ci-01",
+      "user": "nvega",
+      "comment": "nico@nv-x13",
+      "private_key": "/root/.replay/kn"
+    },
+    {
+      "id": "nico-extra-key",
+      "kind": "key",
+      "host": "web-01",
+      "user": "nvega",
+      "comment": "nico@{device}",
+      "private_key": "/root/.replay/k4"
+    }
+  ],
+  "took": [
+    {
+      "what": "the database archives on db-01 and ci-01 were removed",
+      "words": [
+        "archive",
+        "backup"
+      ]
+    }
+  ]
+}

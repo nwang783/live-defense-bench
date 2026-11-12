@@ -1,0 +1,39 @@
+#!/bin/sh
+# Release step: put the current main of the site plugin on web-01 and run the release script there.
+set -u
+REPO=/srv/git/larkspur-site.git
+WORK=/srv/artifacts/larkspur-site
+PLUGIN=/var/www/larkspur/wp-content/plugins/larkspur-site
+KEY=/home/deploy/.ssh/id_ed25519
+# How the release reaches web-01. "push" sends the files and nothing else; "agent" also lets web-01 check the
+# release against the repository here during the release, with this job's key.
+METHOD=push
+stamp=$(date -Is)
+sha=$(git --git-dir="$REPO" rev-parse --short main 2>/dev/null) || {
+    echo "$stamp release fail no repository at $REPO"
+    exit 1
+}
+rm -rf "$WORK" && mkdir -p "$WORK"
+git --git-dir="$REPO" archive main | tar -x -C "$WORK" || { echo "$stamp release fail archive"; exit 1; }
+case "$METHOD" in
+    agent)
+        eval "$(ssh-agent -s)" >/dev/null 2>&1
+        ssh-add -q "$KEY" 2>/dev/null
+        tar -cz -C "$WORK" . | ssh -A web-01 \
+            "tar -xz -C $PLUGIN && git -C $PLUGIN ls-remote --exit-code origin main >/dev/null && \
+             sudo /usr/local/bin/larkspur-deploy $sha" >/dev/null 2>&1
+        rc=$?
+        ssh-agent -k >/dev/null 2>&1
+        ;;
+    *)
+        tar -cz -C "$WORK" . | ssh web-01 \
+            "tar -xz -C $PLUGIN && sudo /usr/local/bin/larkspur-deploy $sha" >/dev/null 2>&1
+        rc=$?
+        ;;
+esac
+if [ "$rc" = 0 ]; then
+    echo "$stamp release ok $sha"
+else
+    echo "$stamp release fail web-01 refused the release ($sha, $METHOD, exit $rc)"
+    exit 1
+fi

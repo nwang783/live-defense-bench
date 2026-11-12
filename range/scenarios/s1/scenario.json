@@ -1,0 +1,58 @@
+{
+  "id": "s1",
+  "title": "Customer records leave in stages",
+  "kind": "bench",
+  "story": [
+    "An intruder has Mia Fischer's password (marketing, web-01). An old extra key for her account was put on web-01 before the restart.",
+    "During the shift it logs in as Mia from two addresses. First it takes one mailing list with the export tool, as marketing does. Later it uses the key, takes a second list while Mia is at work from home, tries to read settings files with sudo, and then takes all customers with the support look-up mode. At the end it removes the export files and the shell history."
+  ],
+  "switches": {
+    "flaws": "none",
+    "foothold": "none",
+    "business": "on"
+  },
+  "head_start_s": 180,
+  "shift_s": 1200,
+  "jitter_s": 20,
+  "perfect_at_s": 500,
+  "damage": {
+    "measure": "customer_records_left",
+    "limit": 0.4,
+    "unit": "share of the 240 customers"
+  },
+  "names": {
+    "device": [
+      "ipad-mini",
+      "air-2021",
+      "galaxy-tab"
+    ]
+  },
+  "secrets": {
+    "password": {
+      "bind": "unix_mfischer"
+    }
+  },
+  "setup": {
+    "planted": [
+      {
+        "kind": "key",
+        "host": "web-01",
+        "user": "mfischer",
+        "comment": "mia@{device}",
+        "private_key": "/root/.replay/k1",
+        "age_days": 34
+      }
+    ]
+  },
+  "notes": "Bench version 2 (2026-11-11). Evidence in steps: see timeline.json notes. Damage: the exports leave 41 (0.17), 83 (0.35) and then all 240 customers (1.0). The limit 0.4 means: stop the intruder before the last export (+900). Before it, the defender has had evidence with no normal look-alike for 5 minutes (+600: two places at one time, a key that Mia never uses) and loud evidence for more than 2 minutes (+760: sudo refusals).",
+  "staff_sessions": [
+    {
+      "user": "mfischer",
+      "host": "web-01",
+      "at": 565,
+      "hold_s": 260,
+      "from": "usual",
+      "run": "ls -t ~ | head -5"
+    }
+  ]
+}

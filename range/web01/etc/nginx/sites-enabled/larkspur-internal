@@ -1,0 +1,20 @@
+# Internal tools site: release notes and the maintenance steps the other hosts fetch.
+# Office network and the shop's own hosts only.
+server {
+    listen 80;
+    server_name web-01 internal.larkspur.lan;
+    root /var/www/internal;
+    index index.html;
+    autoindex on;
+
+    access_log /var/log/nginx/internal.access.log;
+    error_log /var/log/nginx/internal.error.log;
+
+    allow 10.20.0.0/24;
+    allow 127.0.0.1;
+    deny all;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}

@@ -1,0 +1,42 @@
+{
+  "intruder": {
+    "addresses": [
+      "{intruder.0}",
+      "{intruder.1}"
+    ]
+  },
+  "accounts": [
+    {
+      "host": "web-01",
+      "user": "mfischer"
+    }
+  ],
+  "hosts": [
+    "web-01"
+  ],
+  "ways_in": [
+    {
+      "id": "mia-password",
+      "kind": "password",
+      "host": "web-01",
+      "user": "mfischer",
+      "secret": "password"
+    },
+    {
+      "id": "mia-extra-key",
+      "kind": "key",
+      "host": "web-01",
+      "user": "mfischer",
+      "comment": "mia@{device}",
+      "private_key": "/root/.replay/k1"
+    }
+  ],
+  "took": [
+    {
+      "what": "the customer list (names and email addresses)",
+      "words": [
+        "customer"
+      ]
+    }
+  ]
+}

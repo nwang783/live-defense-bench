@@ -1,0 +1,9 @@
+{
+ "notes": "Local steps only: the expect_fail key and the replay clock.",
+ "steps": [
+  {"at": 30, "source": "intruder.0", "label": "a step that works", "timeout": 30, "run": "test -r /etc/os-release"},
+  {"at": 60, "source": "intruder.0", "label": "a command refused on purpose", "timeout": 30, "expect_fail": true,
+   "run": "test -r /nonexistent/file"},
+  {"at": 90, "source": "intruder.0", "label": "a step that fails", "timeout": 30, "run": "test -r /nonexistent/file"}
+ ]
+}

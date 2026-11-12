@@ -1,0 +1,63 @@
+{
+ "id": "t0-test",
+ "title": "Test timeline: a test account logs in and reads a marker file",
+ "kind": "test",
+ "story": [
+  "A harmless timeline that proves the replay engine. It uses an account made for the test only and needs no flaw of the range.",
+  "Before the shift the test account logs in with its password and puts a second login key. In the shift it reads one marker file every 2 minutes, from the middle of the shift with the second key too."
+ ],
+ "switches": {
+  "flaws": "none",
+  "foothold": "none",
+  "business": "on"
+ },
+ "head_start_s": 180,
+ "shift_s": 1200,
+ "jitter_s": 10,
+ "perfect_at_s": 600,
+ "damage": {
+  "measure": "marker_reads",
+  "limit": 0.5,
+  "unit": "share of the planned marker reads that worked"
+ },
+ "names": {
+  "user": [
+   "t0test",
+   "t0check",
+   "t0probe"
+  ],
+  "marker": [
+   "marker.txt",
+   "t0-marker.txt",
+   "notes-marker.txt"
+  ],
+  "laptop": [
+   "lt-0412",
+   "mbp-07",
+   "x1-carbon"
+  ]
+ },
+ "secrets": {
+  "password": 20
+ },
+ "setup": {
+  "accounts": [
+   {
+    "host": "web-01",
+    "user": "{user}",
+    "name": "T0 test account (range test only)",
+    "password": "password"
+   }
+  ],
+  "files": [
+   {
+    "host": "web-01",
+    "path": "/home/{user}/{marker}",
+    "owner": "{user}",
+    "mode": "0600",
+    "text": "t0-test marker file. It holds nothing of value.\n"
+   }
+  ]
+ },
+ "notes": "Test scenario for the engine only. Not one of the benchmark's scenarios."
+}

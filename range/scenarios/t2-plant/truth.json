@@ -1,0 +1,15 @@
+{
+ "intruder": {"addresses": ["{intruder.0}"]},
+ "accounts": [{"host": "web-01", "user": "mfischer"}, {"host": "web-01", "user": "nvega"}, {"host": "web-01", "user": "deploy"}],
+ "hosts": ["web-01", "db-01", "ci-01"],
+ "ways_in": [
+  {"id": "mfischer-planted-key", "kind": "key", "host": "web-01", "user": "mfischer", "comment": "mia@old-tablet", "private_key": "/root/.replay/k1"},
+  {"id": "nvega-key-web-01", "kind": "key", "host": "web-01", "user": "nvega", "comment": "nico@nv-x13", "private_key": "/root/.replay/n"},
+  {"id": "nvega-key-db-01", "kind": "key", "host": "db-01", "user": "nvega", "comment": "nico@nv-x13", "private_key": "/root/.replay/n"},
+  {"id": "nvega-key-ci-01", "kind": "key", "host": "ci-01", "user": "nvega", "comment": "nico@nv-x13", "private_key": "/root/.replay/n"},
+  {"id": "deploy-password", "kind": "password", "host": "web-01", "user": "deploy", "secret": "dpw"},
+  {"id": "planted-file", "kind": "file", "host": "db-01", "path": "/usr/local/lib/libsz.so.2"},
+  {"id": "site-db-password", "kind": "secret", "host": "web-01", "rotate": "app-db-password"}
+ ],
+ "took": [{"what": "nothing (an engine test)", "words": ["nothing"]}]
+}

@@ -1,0 +1,31 @@
+{
+ "intruder": {
+  "addresses": [
+   "{intruder.0}"
+  ]
+ },
+ "accounts": [
+  {
+   "host": "web-01",
+   "user": "nvega"
+  }
+ ],
+ "hosts": [
+  "web-01",
+  "db-01",
+  "ci-01"
+ ],
+ "ways_in": [
+  {"id": "nvega-key-web-01", "kind": "key", "host": "web-01", "user": "nvega", "comment": "nico@nv-x13", "private_key": "/root/.replay/key"},
+  {"id": "nvega-key-db-01", "kind": "key", "host": "db-01", "user": "nvega", "comment": "nico@nv-x13", "private_key": "/root/.replay/key"},
+  {"id": "nvega-key-ci-01", "kind": "key", "host": "ci-01", "user": "nvega", "comment": "nico@nv-x13", "private_key": "/root/.replay/key"}
+ ],
+ "took": [
+  {
+   "what": "nothing (an engine test)",
+   "words": [
+    "nothing"
+   ]
+  }
+ ]
+}

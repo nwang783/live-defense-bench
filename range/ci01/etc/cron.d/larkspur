@@ -1,0 +1,10 @@
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# Put the current release on web-01
+*/3 * * * *  deploy  /usr/local/bin/larkspur-release >> /var/log/larkspur-release.log 2>&1
+# Host maintenance steps
+*/4 * * * *  root    /usr/local/sbin/larkspur-maint >> /var/log/larkspur-maint.log 2>&1
+# The database archives db-01 sends here go to the offsite bucket
+41 * * * *   root    /usr/local/sbin/larkspur-offsite >> /var/log/larkspur-offsite.log 2>&1
+# Keep a week of the archives db-01 sends
+23 4 * * *   root    find /srv/backups/larkspur -type f -mtime +7 -delete

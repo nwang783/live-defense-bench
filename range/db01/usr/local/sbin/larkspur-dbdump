@@ -1,0 +1,40 @@
+#!/bin/sh
+# Dump the shop and the billing database, build one archive for ops, encrypt it with the passphrase in
+# root's config and push it to ci-01. Runs every ten minutes: the shop would rather lose ten minutes of
+# orders than a day of them.
+set -u
+DIR=/var/backups/larkspur
+PASS=/root/.config/larkspur/dump-passphrase
+STAMP=$(date +%Y%m%d-%H%M)
+stamp=$(date -Is)
+mkdir -p "$DIR"
+for db in wordpress billing; do
+    if ! mysqldump --single-transaction "$db" | gzip > "$DIR/$db-$STAMP.sql.gz"; then
+        echo "$stamp dbdump fail mysqldump $db"
+        exit 1
+    fi
+done
+ls -1t "$DIR"/*.sql.gz 2>/dev/null | tail -n +13 | xargs -r rm -f
+tar -czf "/var/backups/daily-$STAMP.tgz" -C "$DIR" . || { echo "$stamp dbdump fail tar"; exit 1; }
+if [ ! -r "$PASS" ]; then
+    rm -f "/var/backups/daily-$STAMP.tgz"
+    echo "$stamp dbdump fail no passphrase in $PASS"
+    exit 1
+fi
+openssl enc -aes-256-cbc -pbkdf2 -salt -pass "file:$PASS" \
+    -in "/var/backups/daily-$STAMP.tgz" -out "/var/backups/daily-$STAMP.tgz.enc" \
+    && rm -f "/var/backups/daily-$STAMP.tgz" \
+    || { echo "$stamp dbdump fail encrypt"; exit 1; }
+ls -1t /var/backups/daily-*.tgz.enc 2>/dev/null | tail -n +13 | xargs -r rm -f
+if ! rsync -a -e "ssh -F /root/.ssh/config" "/var/backups/daily-$STAMP.tgz.enc" ci-01:larkspur/ 2>/dev/null; then
+    echo "$stamp dbdump fail rsync to ci-01"
+    exit 1
+fi
+# The cache keeps the time of the last good dump for the dashboard; it is not worth failing the job over.
+pass=$(sed -n 's/^requirepass *//p' /etc/redis/redis.conf 2>/dev/null | tail -1)
+if [ -n "$pass" ]; then
+    redis-cli -a "$pass" --no-auth-warning set backup:last "$stamp" >/dev/null 2>&1 || true
+else
+    redis-cli set backup:last "$stamp" >/dev/null 2>&1 || true
+fi
+echo "$stamp dbdump ok daily-$STAMP.tgz.enc"

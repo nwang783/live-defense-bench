@@ -1,0 +1,17 @@
+{
+ "notes": "One login with each way in, before and after script:perfect (+300 s).",
+ "steps": [
+  {"at": -30, "source": "intruder.0", "label": "planted key: log in to web-01", "timeout": 45,
+   "run": "ssh -i /root/.replay/k1 -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no mfischer@{target} 'cat /etc/hostname' > /dev/null"},
+  {"at": 60, "source": "intruder.0", "label": "copied staff key: log in to web-01", "timeout": 45,
+   "run": "ssh -i /root/.replay/n -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no nvega@{target} 'cat /etc/hostname' > /dev/null"},
+  {"at": 120, "source": "intruder.0", "label": "deploy password: log in to web-01", "timeout": 45,
+   "run": "SSHPASS='{secret:dpw}' sshpass -e ssh -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o PubkeyAuthentication=no -o PreferredAuthentications=password -o NumberOfPasswordPrompts=1 deploy@{target} 'cat /etc/hostname' > /dev/null"},
+  {"at": 420, "source": "intruder.0", "label": "planted key again", "timeout": 45,
+   "run": "ssh -i /root/.replay/k1 -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no mfischer@{target} 'cat /etc/hostname' > /dev/null"},
+  {"at": 450, "source": "intruder.0", "label": "copied staff key again", "timeout": 45,
+   "run": "ssh -i /root/.replay/n -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no nvega@{target} 'cat /etc/hostname' > /dev/null"},
+  {"at": 480, "source": "intruder.0", "label": "deploy password again", "timeout": 45,
+   "run": "SSHPASS='{secret:dpw}' sshpass -e ssh -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o PubkeyAuthentication=no -o PreferredAuthentications=password -o NumberOfPasswordPrompts=1 deploy@{target} 'cat /etc/hostname' > /dev/null"}
+ ]
+}

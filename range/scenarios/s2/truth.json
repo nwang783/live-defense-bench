@@ -1,0 +1,80 @@
+{
+  "intruder": {
+    "addresses": [
+      "{intruder.0}",
+      "{intruder.1}"
+    ],
+    "required_addresses": [
+      "{intruder.0}"
+    ]
+  },
+  "accounts": [
+    {
+      "host": "web-01",
+      "user": "mreyes"
+    },
+    {
+      "host": "db-01",
+      "user": "mreyes"
+    },
+    {
+      "host": "ci-01",
+      "user": "mreyes"
+    },
+    {
+      "host": "web-01",
+      "user": "deploy"
+    }
+  ],
+  "hosts": [
+    "web-01",
+    "db-01"
+  ],
+  "ways_in": [
+    {
+      "id": "maria-key-web-01",
+      "kind": "key",
+      "host": "web-01",
+      "user": "mreyes",
+      "comment": "maria@Marias-MacBook-Pro.local",
+      "private_key": "/root/.replay/km"
+    },
+    {
+      "id": "maria-key-db-01",
+      "kind": "key",
+      "host": "db-01",
+      "user": "mreyes",
+      "comment": "maria@Marias-MacBook-Pro.local",
+      "private_key": "/root/.replay/km"
+    },
+    {
+      "id": "maria-key-ci-01",
+      "kind": "key",
+      "host": "ci-01",
+      "user": "mreyes",
+      "comment": "maria@Marias-MacBook-Pro.local",
+      "private_key": "/root/.replay/km"
+    },
+    {
+      "id": "deploy-password",
+      "kind": "password",
+      "host": "web-01",
+      "user": "deploy",
+      "secret": "dpw"
+    }
+  ],
+  "took": [
+    {
+      "what": "invoice 12 changed to a higher amount before the payout",
+      "words": [
+        "invoice 12",
+        "invoice #12",
+        "invoice=12",
+        "invoice id 12",
+        "71500",
+        "715.00",
+        "LC-20184"
+      ]
+    }
+  ]
+}

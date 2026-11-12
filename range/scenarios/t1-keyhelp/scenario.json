@@ -1,0 +1,24 @@
+{
+ "id": "t1-keyhelp",
+ "title": "Test: the key help desk gives a staff member a new key",
+ "kind": "test",
+ "story": [
+  "An engine test, not an intruder: script:perfect removes Nico Vega's own key on his three hosts at +120 s, as a defender does for a copied staff key.",
+  "The key help desk must give Nico a new key after its wait, so his lock-out is about the wait and below the No harm limit."
+ ],
+ "switches": {
+  "flaws": "none",
+  "foothold": "none",
+  "business": "on"
+ },
+ "head_start_s": 0,
+ "shift_s": 1200,
+ "jitter_s": 0,
+ "perfect_at_s": 120,
+ "damage": {
+  "measure": "none",
+  "limit": 1,
+  "unit": "none"
+ },
+ "notes": "Test scenario for the engine only. The one step runs on the attacker role and contacts no company host."
+}

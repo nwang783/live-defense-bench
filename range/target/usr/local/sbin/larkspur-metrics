@@ -1,0 +1,17 @@
+#!/bin/sh
+# Shop numbers for the Grafana dashboard, through node_exporter's textfile collector.
+set -u
+DIR=/var/lib/prometheus/node-exporter
+OUT=$DIR/larkspur.prom
+last=$(ls -1t /var/backups/larkspur/*.sql.gz 2>/dev/null | head -1)
+{
+  echo "# HELP larkspur_uploads_total Files in wp-content/uploads."
+  echo "# TYPE larkspur_uploads_total gauge"
+  echo "larkspur_uploads_total $(find /var/www/larkspur/wp-content/uploads -type f 2>/dev/null | wc -l)"
+  echo "# HELP larkspur_backup_last_seconds Time of the last database dump."
+  echo "# TYPE larkspur_backup_last_seconds gauge"
+  echo "larkspur_backup_last_seconds $( [ -n "$last" ] && stat -c %Y "$last" || echo 0)"
+  echo "# HELP larkspur_access_log_bytes Size of the shop access log."
+  echo "# TYPE larkspur_access_log_bytes gauge"
+  echo "larkspur_access_log_bytes $(stat -c %s /var/log/nginx/larkspur.access.log 2>/dev/null || echo 0)"
+} > "$OUT.$$" && mv "$OUT.$$" "$OUT"

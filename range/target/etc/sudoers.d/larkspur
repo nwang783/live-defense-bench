@@ -1,0 +1,5 @@
+# Admins
+%sudo   ALL=(ALL:ALL) NOPASSWD: ALL
+# CI
+deploy  ALL=(root) NOPASSWD: /usr/local/bin/larkspur-deploy
+deploy  ALL=(root) NOPASSWD: /usr/bin/rsync

@@ -1,0 +1,43 @@
+{
+ "id": "t2-plant",
+ "title": "Test: planted state, a staff key copy, the deploy password and the settlement batch",
+ "kind": "test",
+ "story": [
+  "An engine test, not one of the bench's scenarios: the intruder box gets ways in that are older than the logs (a key line, a file), a copy of Nico's key and the deploy password.",
+  "Each one is used once. The settlement batch pays the two invoices of the week at +600 s."
+ ],
+ "switches": {
+  "flaws": "none",
+  "foothold": "none",
+  "business": "on"
+ },
+ "head_start_s": 60,
+ "shift_s": 1200,
+ "jitter_s": 0,
+ "perfect_at_s": 300,
+ "payout_at_s": 600,
+ "damage": {
+  "measure": "bad_payout_sent",
+  "limit": 1,
+  "unit": "bad payout sent (0 or 1)"
+ },
+ "secrets": {
+  "dpw": 20
+ },
+ "setup": {
+  "planted": [
+   {"kind": "key", "host": "web-01", "user": "mfischer", "comment": "mia@old-tablet", "private_key": "/root/.replay/k1", "age_days": 40},
+   {"kind": "file", "host": "db-01", "path": "/usr/local/lib/libsz.so.2", "text": "\u007fELF\n", "owner": "root", "mode": "0644", "age_days": 90}
+  ],
+  "staff_key_copies": [
+   {"user": "nvega", "hosts": ["web-01", "db-01", "ci-01"], "dest": "/root/.replay/n"}
+  ],
+  "files": [
+   {"host": "db-01", "path": "/tmp/p.sql", "owner": "root", "mode": "0600", "text": "UPDATE billing.invoices SET paid_at=CURDATE() WHERE id IN (6,7);\n"}
+  ],
+  "sql": [
+   {"host": "db-01", "file": "/tmp/p.sql", "table": "billing.invoices", "ids": [6, 7]}
+  ]
+ },
+ "notes": "Test scenario for the engine only. Each step is one harmless login that runs a read-only command."
+}

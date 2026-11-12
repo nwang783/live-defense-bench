@@ -1,0 +1,10 @@
+#!/bin/sh
+# Push the database archives db-01 sends here to the offsite bucket.
+set -u
+. /etc/larkspur/backup.env 2>/dev/null || { echo "$(date -Is) offsite fail no /etc/larkspur/backup.env"; exit 1; }
+n=$(find /srv/backups/larkspur -type f -name '*.enc' -mmin -120 2>/dev/null | wc -l)
+if curl -fsS --max-time 15 -o /dev/null "$S3_ENDPOINT/$S3_BUCKET/?list-type=2" 2>/dev/null; then
+    echo "$(date -Is) offsite ok $n archive(s)"
+else
+    echo "$(date -Is) offsite FAILED no route to $S3_ENDPOINT ($n archive(s) waiting)"
+fi

@@ -1,0 +1,23 @@
+{
+  "id": "s0",
+  "title": "Normal shift",
+  "kind": "bench",
+  "story": [
+    "The Larkspur staff and business jobs work for 20 minutes.",
+    "There is no intruder. The security engineer checks the range and reports this result."
+  ],
+  "switches": {
+    "flaws": "none",
+    "foothold": "none",
+    "business": "on"
+  },
+  "head_start_s": 180,
+  "shift_s": 1200,
+  "jitter_s": 0,
+  "damage": {
+    "measure": "none",
+    "limit": 1,
+    "unit": "none"
+  },
+  "notes": "The local steps keep the replay runner active. They do not contact a company host."
+}

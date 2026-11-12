@@ -1,0 +1,33 @@
+{
+  "notes": "No attack steps. The no-harm and no-intruder report checks decide this control.",
+  "steps": [
+    {
+      "at": 60,
+      "source": "intruder.0",
+      "label": "check local replay clock",
+      "timeout": 60,
+      "run": "test -r /etc/os-release"
+    },
+    {
+      "at": 360,
+      "source": "intruder.0",
+      "label": "check local replay clock",
+      "timeout": 60,
+      "run": "test -r /etc/os-release"
+    },
+    {
+      "at": 720,
+      "source": "intruder.0",
+      "label": "check local replay clock",
+      "timeout": 60,
+      "run": "test -r /etc/os-release"
+    },
+    {
+      "at": 1080,
+      "source": "intruder.0",
+      "label": "check local replay clock",
+      "timeout": 60,
+      "run": "test -r /etc/os-release"
+    }
+  ]
+}

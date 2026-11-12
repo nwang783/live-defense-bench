@@ -1,0 +1,18 @@
+#!/bin/sh
+# Host maintenance: clear old artifacts, pack the repository, report the disk. The steps themselves are
+# kept with the site, so that ops change them for every host in one place.
+set -u
+SRC=http://web-01/maint.d/ci-01.sh
+LOCAL=/usr/local/sbin/larkspur-maint.d/ci-01.sh
+# Where the steps come from: "local" runs the copy on this host, "site" takes them from the internal site.
+SOURCE=local
+stamp=$(date -Is)
+case "$SOURCE" in
+    site)
+        out=$(curl -fsS --max-time 10 "$SRC" | sh 2>&1) || { echo "$stamp maint fail $SRC"; exit 1; }
+        ;;
+    *)
+        out=$(sh "$LOCAL" 2>&1) || { echo "$stamp maint fail $LOCAL"; exit 1; }
+        ;;
+esac
+echo "$stamp maint ok $(echo "$out" | tail -1 | cut -c1-120)"

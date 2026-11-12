@@ -1,0 +1,11 @@
+#!/bin/sh
+# Settle the invoices the gateway has paid and count what is still open. The bookkeeper reads this log.
+set -u
+stamp=$(date -Is)
+out=$(mysql -N -B -e "update invoices set paid_at = curdate()
+         where paid_at is null and issued_at < curdate() - interval 21 day;
+     select count(*) from invoices where paid_at is null" billing 2>&1) || {
+    echo "$stamp invoices fail $(echo "$out" | tail -1 | cut -c1-120)"
+    exit 1
+}
+echo "$stamp invoices ok $(echo "$out" | tail -1) open"

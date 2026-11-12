@@ -1,0 +1,54 @@
+{
+  "intruder": {
+    "addresses": [
+      "{intruder.0}",
+      "{intruder.1}"
+    ],
+    "required_addresses": [
+      "{intruder.1}"
+    ]
+  },
+  "accounts": [],
+  "hosts": [
+    "web-01",
+    "db-01"
+  ],
+  "ways_in": [
+    {
+      "id": "muplugin",
+      "kind": "flaw",
+      "host": "web-01"
+    },
+    {
+      "id": "extra-file",
+      "kind": "file",
+      "host": "web-01",
+      "path": "{spare_handler}",
+      "contains": "q7-41c09e5fa2"
+    },
+    {
+      "id": "site-db-password",
+      "kind": "secret",
+      "host": "web-01",
+      "rotate": "app-db-password"
+    }
+  ],
+  "took": [
+    {
+      "what": "the site's database password (from wp-config.php)",
+      "words": [
+        "database password",
+        "db password",
+        "DB_PASSWORD",
+        "wp-config",
+        "database credential",
+        "database credentials",
+        "db credential",
+        "db credentials",
+        "database settings",
+        "db settings",
+        "database login"
+      ]
+    }
+  ]
+}

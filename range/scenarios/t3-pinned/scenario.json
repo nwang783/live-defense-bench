@@ -1,0 +1,32 @@
+{
+ "id": "t3-pinned",
+ "title": "Test: pinned staff sessions and a step that is refused on purpose",
+ "kind": "test",
+ "story": [
+  "An engine test, not one of the bench's scenarios: four real staff sessions at fixed times (one in the head start, one through web-01, one from a second address), with the bench profile.",
+  "The timeline has only local steps: one that works, one that fails on purpose (expect_fail) and one that fails."
+ ],
+ "switches": {
+  "flaws": "none",
+  "foothold": "none",
+  "business": "on",
+  "twins": "on"
+ },
+ "head_start_s": 120,
+ "shift_s": 600,
+ "jitter_s": 0,
+ "damage": {
+  "measure": "none",
+  "limit": 1,
+  "unit": "none"
+ },
+ "staff_sessions": [
+  {"user": "mfischer", "host": "web-01", "at": -60, "hold_s": 90, "from": "usual", "run": "ls -la"},
+  {"user": "mreyes", "host": "db-01", "via": "web-01", "at": 200, "hold_s": 150, "from": "usual",
+   "run": "sudo tail -n 5 /var/log/larkspur-invoices.log"},
+  {"user": "mfischer", "host": "web-01", "at": 330, "hold_s": 120, "from": "second", "run": "uptime"},
+  {"user": "nvega", "host": "ci-01", "at": 450, "hold_s": 100,
+   "run": "sudo tail -n 5 /var/log/larkspur-release.log"}
+ ],
+ "notes": "Engine test of pinned staff sessions and the key help desk. No step contacts a company host."
+}

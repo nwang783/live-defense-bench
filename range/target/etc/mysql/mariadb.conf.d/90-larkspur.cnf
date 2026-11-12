@@ -1,0 +1,4 @@
+[mysqld]
+innodb_buffer_pool_size = 96M
+max_connections = 40
+performance_schema = OFF

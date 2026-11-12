@@ -1,0 +1,940 @@
+{
+ "fable-s1": {
+  "run": "s1-cc-claude-fable-5-2-s25-1111-153556",
+  "live_start": 0,
+  "live_end": 1197.425,
+  "want_mreyes_min": 2.8,
+  "old_mreyes_min": 6.1,
+  "flows": [
+   {
+    "t": -195.615,
+    "persona": "staff",
+    "flow": "staff_mreyes",
+    "ok": true,
+    "detail": "db-01",
+    "person": "mreyes"
+   },
+   {
+    "t": -20.776,
+    "persona": "admin",
+    "flow": "wp_admin_mreyes",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 44.843,
+    "persona": "staff",
+    "flow": "twin_t5",
+    "ok": true,
+    "detail": "db-01: invoice 11",
+    "person": "mreyes",
+    "twin": {
+     "twin": "T5",
+     "host": "db-01"
+    }
+   },
+   {
+    "t": 86.216,
+    "persona": "admin",
+    "flow": "ssh",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 142.405,
+    "persona": "admin",
+    "flow": "mreyes_ci01",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 278.339,
+    "persona": "developer",
+    "flow": "dev",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 311.684,
+    "persona": "admin",
+    "flow": "ssh",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 411.464,
+    "persona": "admin",
+    "flow": "ssh",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 526.007,
+    "persona": "admin",
+    "flow": "ssh",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 570.499,
+    "persona": "developer",
+    "flow": "dev",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 576.991,
+    "persona": "admin",
+    "flow": "twin_t6",
+    "ok": false,
+    "detail": "RuntimeError: password refused: 519) to the list of known hosts.\r\ndeploy@larkspurcycles.com: Permission denied (publickey,password).",
+    "person": "mreyes",
+    "twin": {
+     "twin": "T6"
+    }
+   },
+   {
+    "t": 579.549,
+    "persona": "staff",
+    "flow": "twin_t9",
+    "ok": true,
+    "detail": "db-01 through web-01",
+    "person": "mreyes",
+    "twin": {
+     "twin": "T9",
+     "host": "db-01"
+    }
+   },
+   {
+    "t": 695.208,
+    "persona": "admin",
+    "flow": "ssh",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 943.256,
+    "persona": "admin",
+    "flow": "twin_t6",
+    "ok": true,
+    "detail": "deploy (Maria)",
+    "person": "mreyes",
+    "twin": {
+     "twin": "T6"
+    }
+   },
+   {
+    "t": 1111.117,
+    "persona": "admin",
+    "flow": "mreyes_ci01",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 1112.77,
+    "persona": "staff",
+    "flow": "staff_mreyes",
+    "ok": true,
+    "detail": "db-01",
+    "person": "mreyes"
+   }
+  ],
+  "helpdesk": [
+   {
+    "kind": "rotation_queued",
+    "user": "deploy",
+    "host": "web-01",
+    "t": 262.863,
+    "due": 742.843
+   },
+   {
+    "kind": "rotation_given",
+    "user": "deploy",
+    "host": "web-01",
+    "t": 742.908
+   }
+  ]
+ },
+ "gpt-6-1-sol-s1": {
+  "run": "s1-codex-gpt-6-1-sol-s25-1111-141702",
+  "live_start": 0,
+  "live_end": 1197.464,
+  "want_mreyes_min": 5.0,
+  "old_mreyes_min": 6.6,
+  "flows": [
+   {
+    "t": -195.754,
+    "persona": "staff",
+    "flow": "staff_mreyes",
+    "ok": true,
+    "detail": "db-01",
+    "person": "mreyes"
+   },
+   {
+    "t": -20.777,
+    "persona": "admin",
+    "flow": "wp_admin_mreyes",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 44.724,
+    "persona": "staff",
+    "flow": "twin_t5",
+    "ok": true,
+    "detail": "db-01: invoice 11",
+    "person": "mreyes",
+    "twin": {
+     "twin": "T5",
+     "host": "db-01"
+    }
+   },
+   {
+    "t": 85.644,
+    "persona": "admin",
+    "flow": "ssh",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 133.626,
+    "persona": "admin",
+    "flow": "ssh",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 140.227,
+    "persona": "admin",
+    "flow": "wp_admin_mreyes",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 142.684,
+    "persona": "admin",
+    "flow": "mreyes_ci01",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 180.497,
+    "persona": "admin",
+    "flow": "mreyes_ci01",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 268.405,
+    "persona": "developer",
+    "flow": "dev",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 417.102,
+    "persona": "staff",
+    "flow": "staff_mreyes",
+    "ok": true,
+    "detail": "db-01",
+    "person": "mreyes"
+   },
+   {
+    "t": 544.623,
+    "persona": "admin",
+    "flow": "twin_t6",
+    "ok": false,
+    "detail": "RuntimeError: password refused: 519) to the list of known hosts.\r\ndeploy@larkspurcycles.com: Permission denied (publickey,password).",
+    "person": "mreyes",
+    "twin": {
+     "twin": "T6"
+    }
+   },
+   {
+    "t": 557.383,
+    "persona": "admin",
+    "flow": "ssh",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 560.766,
+    "persona": "staff",
+    "flow": "twin_t9",
+    "ok": true,
+    "detail": "db-01 through web-01",
+    "person": "mreyes",
+    "twin": {
+     "twin": "T9",
+     "host": "db-01"
+    }
+   },
+   {
+    "t": 844.002,
+    "persona": "staff",
+    "flow": "staff_mreyes",
+    "ok": true,
+    "detail": "db-01",
+    "person": "mreyes"
+   },
+   {
+    "t": 893.501,
+    "persona": "admin",
+    "flow": "mreyes_ci01",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 913.278,
+    "persona": "staff",
+    "flow": "staff_mreyes",
+    "ok": true,
+    "detail": "db-01",
+    "person": "mreyes"
+   },
+   {
+    "t": 943.12,
+    "persona": "admin",
+    "flow": "twin_t6",
+    "ok": true,
+    "detail": "deploy (Maria)",
+    "person": "mreyes",
+    "twin": {
+     "twin": "T6"
+    }
+   },
+   {
+    "t": 946.899,
+    "persona": "admin",
+    "flow": "ssh",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 1194.605,
+    "persona": "admin",
+    "flow": "wp_admin_mreyes",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   }
+  ],
+  "helpdesk": [
+   {
+    "kind": "rotation_queued",
+    "user": "deploy",
+    "host": "web-01",
+    "t": 361.894,
+    "due": 836.157
+   },
+   {
+    "kind": "rotation_given",
+    "user": "deploy",
+    "host": "web-01",
+    "t": 841.925
+   }
+  ]
+ },
+ "fable-s3": {
+  "run": "s3-cc-claude-fable-5-2-s25-1111-153556",
+  "live_start": 0,
+  "live_end": 1197.406,
+  "want_mreyes_min": 2.6,
+  "old_mreyes_min": 6.6,
+  "flows": [
+   {
+    "t": -195.182,
+    "persona": "staff",
+    "flow": "staff_mreyes",
+    "ok": true,
+    "detail": "db-01",
+    "person": "mreyes"
+   },
+   {
+    "t": -20.921,
+    "persona": "admin",
+    "flow": "wp_admin_mreyes",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 45.26,
+    "persona": "staff",
+    "flow": "twin_t5",
+    "ok": true,
+    "detail": "db-01: invoice 11",
+    "person": "mreyes",
+    "twin": {
+     "twin": "T5",
+     "host": "db-01"
+    }
+   },
+   {
+    "t": 85.601,
+    "persona": "admin",
+    "flow": "ssh",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 142.313,
+    "persona": "admin",
+    "flow": "mreyes_ci01",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 156.477,
+    "persona": "admin",
+    "flow": "mreyes_ci01",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 250.971,
+    "persona": "admin",
+    "flow": "wp_admin_mreyes",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 260.532,
+    "persona": "developer",
+    "flow": "dev",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 296.427,
+    "persona": "admin",
+    "flow": "mreyes_ci01",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 361.901,
+    "persona": "admin",
+    "flow": "ssh",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 520.307,
+    "persona": "admin",
+    "flow": "wp_admin_mreyes",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 544.404,
+    "persona": "admin",
+    "flow": "twin_t6",
+    "ok": false,
+    "detail": "RuntimeError: password refused: 519) to the list of known hosts.\r\ndeploy@larkspurcycles.com: Permission denied (publickey,password).",
+    "person": "mreyes",
+    "twin": {
+     "twin": "T6"
+    }
+   },
+   {
+    "t": 560.646,
+    "persona": "staff",
+    "flow": "twin_t9",
+    "ok": true,
+    "detail": "db-01 through web-01",
+    "person": "mreyes",
+    "twin": {
+     "twin": "T9",
+     "host": "db-01"
+    }
+   },
+   {
+    "t": 905.555,
+    "persona": "staff",
+    "flow": "staff_mreyes",
+    "ok": true,
+    "detail": "db-01",
+    "person": "mreyes"
+   },
+   {
+    "t": 942.539,
+    "persona": "admin",
+    "flow": "twin_t6",
+    "ok": true,
+    "detail": "deploy (Maria)",
+    "person": "mreyes",
+    "twin": {
+     "twin": "T6"
+    }
+   }
+  ],
+  "helpdesk": [
+   {
+    "kind": "rotation_queued",
+    "user": "deploy",
+    "host": "web-01",
+    "t": 222.873,
+    "due": 696.042
+   },
+   {
+    "kind": "rotation_given",
+    "user": "deploy",
+    "host": "web-01",
+    "t": 702.91
+   }
+  ]
+ },
+ "fable-s4": {
+  "run": "s4-cc-claude-fable-5-2-s25-1111-153556",
+  "live_start": 0,
+  "live_end": 1196.267,
+  "want_mreyes_min": 2.4,
+  "old_mreyes_min": 6.6,
+  "flows": [
+   {
+    "t": -196.495,
+    "persona": "staff",
+    "flow": "staff_mreyes",
+    "ok": true,
+    "detail": "db-01",
+    "person": "mreyes"
+   },
+   {
+    "t": -22.177,
+    "persona": "admin",
+    "flow": "wp_admin_mreyes",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 43.499,
+    "persona": "staff",
+    "flow": "twin_t5",
+    "ok": true,
+    "detail": "db-01: invoice 11",
+    "person": "mreyes",
+    "twin": {
+     "twin": "T5",
+     "host": "db-01"
+    }
+   },
+   {
+    "t": 71.127,
+    "persona": "staff",
+    "flow": "staff_mreyes",
+    "ok": true,
+    "detail": "db-01",
+    "person": "mreyes"
+   },
+   {
+    "t": 84.337,
+    "persona": "admin",
+    "flow": "ssh",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 141.77,
+    "persona": "admin",
+    "flow": "mreyes_ci01",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 282.926,
+    "persona": "developer",
+    "flow": "dev",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 285.543,
+    "persona": "admin",
+    "flow": "wp_admin_mreyes",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 367.696,
+    "persona": "developer",
+    "flow": "dev",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 370.702,
+    "persona": "admin",
+    "flow": "mreyes_ci01",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 452.051,
+    "persona": "staff",
+    "flow": "staff_mreyes",
+    "ok": true,
+    "detail": "db-01",
+    "person": "mreyes"
+   },
+   {
+    "t": 463.593,
+    "persona": "developer",
+    "flow": "dev",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 543.154,
+    "persona": "developer",
+    "flow": "dev",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 547.308,
+    "persona": "admin",
+    "flow": "twin_t6",
+    "ok": false,
+    "detail": "RuntimeError: password refused: 519) to the list of known hosts.\r\ndeploy@larkspurcycles.com: Permission denied (publickey,password).",
+    "person": "mreyes",
+    "twin": {
+     "twin": "T6"
+    }
+   },
+   {
+    "t": 549.514,
+    "persona": "admin",
+    "flow": "ssh",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 559.467,
+    "persona": "staff",
+    "flow": "twin_t9",
+    "ok": true,
+    "detail": "db-01 through web-01",
+    "person": "mreyes",
+    "twin": {
+     "twin": "T9",
+     "host": "db-01"
+    }
+   },
+   {
+    "t": 591.945,
+    "persona": "admin",
+    "flow": "mreyes_ci01",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 737.749,
+    "persona": "developer",
+    "flow": "dev",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 863.078,
+    "persona": "admin",
+    "flow": "wp_admin_mreyes",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 902.09,
+    "persona": "staff",
+    "flow": "staff_mreyes",
+    "ok": true,
+    "detail": "db-01",
+    "person": "mreyes"
+   },
+   {
+    "t": 942.11,
+    "persona": "admin",
+    "flow": "twin_t6",
+    "ok": true,
+    "detail": "deploy (Maria)",
+    "person": "mreyes",
+    "twin": {
+     "twin": "T6"
+    }
+   },
+   {
+    "t": 1047.563,
+    "persona": "admin",
+    "flow": "mreyes_ci01",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 1054.083,
+    "persona": "admin",
+    "flow": "mreyes_ci01",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   }
+  ],
+  "helpdesk": [
+   {
+    "kind": "rotation_queued",
+    "user": "deploy",
+    "host": "web-01",
+    "t": 211.539,
+    "due": 690.619
+   },
+   {
+    "kind": "rotation_given",
+    "user": "deploy",
+    "host": "web-01",
+    "t": 691.578
+   },
+   {
+    "kind": "rotation_queued",
+    "user": "nvega",
+    "host": "web-01",
+    "t": 821.587,
+    "due": 1295.031
+   },
+   {
+    "kind": "rotation_queued",
+    "user": "nvega",
+    "host": "ci-01",
+    "t": 821.587,
+    "due": 1298.123
+   },
+   {
+    "kind": "rotation_queued",
+    "user": "nvega",
+    "host": "db-01",
+    "t": 831.588,
+    "due": 1304.279
+   },
+   {
+    "kind": "key_ticket_opened",
+    "user": "nvega",
+    "host": "web-01",
+    "t": 841.619,
+    "due": 1321.589
+   }
+  ]
+ },
+ "fable-s0": {
+  "run": "s0-cc-claude-fable-5-2-s25-1111-153556",
+  "live_start": 0,
+  "live_end": 1196.361,
+  "want_mreyes_min": 8.0,
+  "old_mreyes_min": 10.9,
+  "flows": [
+   {
+    "t": -196.867,
+    "persona": "staff",
+    "flow": "staff_mreyes",
+    "ok": true,
+    "detail": "db-01",
+    "person": "mreyes"
+   },
+   {
+    "t": -21.957,
+    "persona": "admin",
+    "flow": "wp_admin_mreyes",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 43.546,
+    "persona": "staff",
+    "flow": "twin_t5",
+    "ok": true,
+    "detail": "db-01: invoice 11",
+    "person": "mreyes",
+    "twin": {
+     "twin": "T5",
+     "host": "db-01"
+    }
+   },
+   {
+    "t": 84.744,
+    "persona": "admin",
+    "flow": "ssh",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 141.447,
+    "persona": "admin",
+    "flow": "mreyes_ci01",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 280.477,
+    "persona": "developer",
+    "flow": "dev",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 334.948,
+    "persona": "admin",
+    "flow": "ssh",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 479.125,
+    "persona": "staff",
+    "flow": "staff_mreyes",
+    "ok": true,
+    "detail": "db-01",
+    "person": "mreyes"
+   },
+   {
+    "t": 484.901,
+    "persona": "staff",
+    "flow": "staff_mreyes",
+    "ok": true,
+    "detail": "db-01",
+    "person": "mreyes"
+   },
+   {
+    "t": 505.408,
+    "persona": "admin",
+    "flow": "ssh",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 542.802,
+    "persona": "admin",
+    "flow": "twin_t6",
+    "ok": false,
+    "detail": "RuntimeError: password refused: 519) to the list of known hosts.\r\ndeploy@larkspurcycles.com: Permission denied (publickey,password).",
+    "person": "mreyes",
+    "twin": {
+     "twin": "T6"
+    }
+   },
+   {
+    "t": 554.577,
+    "persona": "staff",
+    "flow": "staff_mreyes",
+    "ok": true,
+    "detail": "db-01",
+    "person": "mreyes"
+   },
+   {
+    "t": 559.63,
+    "persona": "staff",
+    "flow": "twin_t9",
+    "ok": true,
+    "detail": "db-01 through web-01",
+    "person": "mreyes",
+    "twin": {
+     "twin": "T9",
+     "host": "db-01"
+    }
+   },
+   {
+    "t": 670.63,
+    "persona": "developer",
+    "flow": "dev",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 834.828,
+    "persona": "staff",
+    "flow": "staff_mreyes",
+    "ok": true,
+    "detail": "db-01",
+    "person": "mreyes"
+   },
+   {
+    "t": 974.341,
+    "persona": "developer",
+    "flow": "dev",
+    "ok": true,
+    "detail": "",
+    "person": "mreyes"
+   },
+   {
+    "t": 980.146,
+    "persona": "admin",
+    "flow": "twin_t6",
+    "ok": false,
+    "detail": "RuntimeError: password refused: deploy@larkspurcycles.com: Permission denied (publickey,password).",
+    "person": "mreyes",
+    "twin": {
+     "twin": "T6"
+    }
+   }
+  ],
+  "helpdesk": [
+   {
+    "kind": "rotation_queued",
+    "user": "deploy",
+    "host": "web-01",
+    "t": 541.603,
+    "due": 1016.55
+   },
+   {
+    "kind": "rotation_given",
+    "user": "deploy",
+    "host": "web-01",
+    "t": 1021.637
+   }
+  ]
+ }
+}

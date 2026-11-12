@@ -1,0 +1,34 @@
+#!/bin/sh
+# Shop numbers for the dashboard, read from the shop database on db-01 through node_exporter's
+# textfile collector. The credentials come from wp-config.php, so there is one copy of them.
+set -u
+DIR=/var/lib/prometheus/node-exporter
+OUT=$DIR/larkspur_orders.prom
+stamp=$(date -Is)
+eval "$(php -r 'include "/var/www/larkspur/wp-config.php"; printf("DBH=%s DBN=%s DBU=%s DBP=%s",
+    DB_HOST, DB_NAME, DB_USER, DB_PASSWORD);' 2>/dev/null)"
+if [ -z "${DBH:-}" ]; then
+    echo "$stamp orders fail no database settings in wp-config.php"
+    exit 1
+fi
+MYSQL_PWD="$DBP" export MYSQL_PWD
+rows=$(mysql -h "$DBH" -u "$DBU" -N -B -e \
+    "select (select count(*) from wp_posts where post_type='post' and post_status='publish'),
+            (select count(*) from wp_posts where post_status='pending'),
+            (select count(*) from wp_users)" "$DBN" 2>&1) || {
+    echo "$stamp orders fail $(echo "$rows" | tail -1 | cut -c1-120)"
+    exit 1
+}
+set -- $rows
+{
+  echo "# HELP larkspur_stories_total Published ride stories."
+  echo "# TYPE larkspur_stories_total gauge"
+  echo "larkspur_stories_total ${1:-0}"
+  echo "# HELP larkspur_stories_pending Ride stories waiting for the editor."
+  echo "# TYPE larkspur_stories_pending gauge"
+  echo "larkspur_stories_pending ${2:-0}"
+  echo "# HELP larkspur_site_users Accounts on the site."
+  echo "# TYPE larkspur_site_users gauge"
+  echo "larkspur_site_users ${3:-0}"
+} > "$OUT.$$" && mv "$OUT.$$" "$OUT"
+echo "$stamp orders ok ${1:-0} published ${2:-0} pending"

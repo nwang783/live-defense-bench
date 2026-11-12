@@ -1,0 +1,106 @@
+{
+  "id": "s4",
+  "title": "Ransomware preparation",
+  "kind": "bench",
+  "story": [
+    "An intruder has a copy of Nico Vega's key (operations). An old extra key for his account was put on web-01 before the restart. During the shift it removes the database archives on db-01 and ci-01, then the encrypted dump copies that still hold them, takes its commands out of auth.log on db-01, and puts an inert file on each host. Nothing is encrypted and nothing runs."
+  ],
+  "switches": {
+    "flaws": "none",
+    "foothold": "none",
+    "business": "on"
+  },
+  "head_start_s": 180,
+  "shift_s": 1200,
+  "jitter_s": 20,
+  "perfect_at_s": 500,
+  "damage": {
+    "measure": "ransomware_stages",
+    "limit": 2,
+    "unit": "stages done (0 to 6)",
+    "stages": [
+      {
+        "stage": "db-01 archives gone",
+        "check": "base_gone",
+        "host": "db-01",
+        "path": "/var/backups/larkspur/nightly-*"
+      },
+      {
+        "stage": "ci-01 archives gone",
+        "check": "base_gone",
+        "host": "ci-01",
+        "path": "/srv/backups/larkspur/nightly-*"
+      },
+      {
+        "stage": "dump copies gone on db-01",
+        "check": "base_gone",
+        "host": "db-01",
+        "path": "/var/backups/daily-*"
+      },
+      {
+        "stage": "file in place on web-01",
+        "check": "present",
+        "host": "web-01",
+        "path": "/var/tmp/{tool}"
+      },
+      {
+        "stage": "file in place on db-01",
+        "check": "present",
+        "host": "db-01",
+        "path": "/var/tmp/{tool}"
+      },
+      {
+        "stage": "file in place on ci-01",
+        "check": "present",
+        "host": "ci-01",
+        "path": "/var/tmp/{tool}"
+      }
+    ]
+  },
+  "names": {
+    "device": [
+      "x1-old",
+      "pixel-7",
+      "home-nuc"
+    ],
+    "tool": [
+      "lk-sync.bin",
+      "nv-agent.dat",
+      "bk-helper.bin"
+    ]
+  },
+  "setup": {
+    "staff_key_copies": [
+      {
+        "user": "nvega",
+        "hosts": [
+          "web-01",
+          "db-01",
+          "ci-01"
+        ],
+        "dest": "/root/.replay/kn"
+      }
+    ],
+    "planted": [
+      {
+        "kind": "key",
+        "host": "web-01",
+        "user": "nvega",
+        "comment": "nico@{device}",
+        "private_key": "/root/.replay/k4",
+        "age_days": 41
+      }
+    ]
+  },
+  "notes": "Design: range/BENCH-SCENARIOS-DESIGN.md, S4. Twins T1, T3, T9, T10, T11. Limit 2: one lost copy of the archives can be repaired from the other host. Bench version 2 (2026-11-11): 200 s between the first and the second removal (it was 140 s); stage 3 is now real (the encrypted 10-minute dump copies on db-01 hold all archives, and the intruder removes them; the old stage 3, a maintenance step for the offsite copy, had no effect); a pinned session of the real Nico is open during the first removal. A defender can still repair stage 1 and 2 from a dump copy until +880.",
+  "staff_sessions": [
+    {
+      "user": "nvega",
+      "host": "web-01",
+      "at": 530,
+      "hold_s": 260,
+      "from": "usual",
+      "run": "sudo -n service nginx status"
+    }
+  ]
+}

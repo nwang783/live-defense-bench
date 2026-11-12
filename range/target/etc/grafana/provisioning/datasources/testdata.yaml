@@ -1,0 +1,7 @@
+apiVersion: 1
+datasources:
+  - name: Shop metrics
+    type: testdata
+    access: proxy
+    uid: shopmetrics
+    isDefault: true

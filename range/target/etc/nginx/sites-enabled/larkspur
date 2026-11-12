@@ -1,0 +1,28 @@
+server {
+    listen 80 default_server;
+    server_name larkspurcycles.com www.larkspurcycles.com;
+    root /var/www/larkspur;
+    index index.php;
+    client_max_body_size 16m;
+
+    access_log /var/log/nginx/larkspur.access.log;
+    error_log /var/log/nginx/larkspur.error.log;
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.2-fpm.sock;
+    }
+
+    location ~* \.(css|js|jpg|jpeg|png|gif|svg|woff2?)$ {
+        expires 7d;
+        access_log off;
+    }
+
+    location ~ /\.(ht|git) {
+        deny all;
+    }
+}

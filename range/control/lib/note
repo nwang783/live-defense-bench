@@ -1,0 +1,23 @@
+#!/bin/sh
+# note: write down what you observe and why you decide, as you work. `note "text"`, or the text on standard
+# input. Each note is kept with its time and this server's name. It always says "noted".
+python3 -c '
+import json, os, select, socket, sys, time
+t = time.time()
+text = " ".join(sys.argv[1:])
+if not text.strip():
+    try:
+        if not sys.stdin.isatty() and select.select([sys.stdin], [], [], 2.0)[0]:
+            text = sys.stdin.read(64000)
+    except Exception:
+        pass
+text = text.strip()[:2000]
+if not text:
+    sys.exit(0)
+d = "/var/lib/larkspur/notes"
+os.makedirs(d, mode=0o700, exist_ok=True)
+with open(os.path.join(d, "notes.jsonl"), "a") as f:
+    f.write(json.dumps({"t": round(t, 3), "host": socket.gethostname().split(".")[0], "text": text}) + "\n")
+' "$@" >/dev/null 2>&1
+echo noted
+exit 0

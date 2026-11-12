@@ -1,0 +1,42 @@
+{
+ "intruder": {
+  "addresses": [
+   "{intruder.0}"
+  ]
+ },
+ "accounts": [
+  {
+   "host": "web-01",
+   "user": "{user}"
+  }
+ ],
+ "hosts": [
+  "web-01"
+ ],
+ "ways_in": [
+  {
+   "id": "password",
+   "kind": "password",
+   "host": "web-01",
+   "user": "{user}",
+   "secret": "password"
+  },
+  {
+   "id": "second-key",
+   "kind": "key",
+   "host": "web-01",
+   "user": "{user}",
+   "comment": "{user}@{laptop}",
+   "private_key": "/root/.replay/key"
+  }
+ ],
+ "took": [
+  {
+   "what": "the marker file /home/{user}/{marker}",
+   "words": [
+    "marker",
+    "{marker}"
+   ]
+  }
+ ]
+}

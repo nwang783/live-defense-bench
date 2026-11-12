@@ -1,0 +1,17 @@
+# Run folders (transcripts, snapshots, results) and local settings
+runs/
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/

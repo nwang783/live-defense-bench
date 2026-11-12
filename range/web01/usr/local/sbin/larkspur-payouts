@@ -1,0 +1,25 @@
+#!/bin/sh
+# Payout reconciliation. The payment key here must be the key the billing database has, or the gateway
+# refuses the payout batch; the job says so when they differ, which is what a half-finished key rotation
+# looks like. Open invoices are counted for the Friday payout.
+set -u
+CFG=/etc/larkspur/payments.ini
+stamp=$(date -Is)
+val() { sed -n "s/^$1 *= *//p" "$CFG" 2>/dev/null | head -1; }
+KEY=$(val secret_key); DBH=$(val db_host); DBN=$(val db_name); DBU=$(val db_user); DBP=$(val db_password)
+if [ -z "$KEY" ] || [ -z "$DBH" ]; then
+    echo "$stamp payouts fail cannot read $CFG"
+    exit 1
+fi
+MYSQL_PWD="$DBP" export MYSQL_PWD
+row=$(mysql -h "$DBH" -u "$DBU" -N -B -e \
+    "select secret_key from payment_providers where provider='stripe'" "$DBN" 2>&1) || {
+    echo "$stamp payouts fail billing database: $(echo "$row" | tail -1 | cut -c1-120)"
+    exit 1
+}
+if [ "$row" != "$KEY" ]; then
+    echo "$stamp payouts fail the key in $CFG is not the key in $DBN.payment_providers"
+    exit 1
+fi
+open=$(mysql -h "$DBH" -u "$DBU" -N -B -e "select count(*) from invoices where paid_at is null" "$DBN" 2>/dev/null)
+echo "$stamp payouts ok ${open:-0} open invoices"

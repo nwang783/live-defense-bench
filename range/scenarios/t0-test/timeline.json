@@ -1,0 +1,132 @@
+{
+ "notes": "15 marker reads are planned: 10 with the password (each 2 minutes from +60 s) and 5 with the second key (each 2 minutes from +660 s, after the middle of the shift).",
+ "steps": [
+  {
+   "at": -150,
+   "source": "intruder.0",
+   "label": "log in with the password and put a second login key",
+   "timeout": 60,
+   "run": "install -d -m 700 /root/.replay && rm -f /root/.replay/key /root/.replay/key.pub && ssh-keygen -q -t ed25519 -N '' -C '{user}@{laptop}' -f /root/.replay/key && SSHPASS='{secret:password}' sshpass -e ssh -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o PubkeyAuthentication=no -o PreferredAuthentications=password -o NumberOfPasswordPrompts=1 {user}@{target} 'umask 077; mkdir -p ~/.ssh; cat >> ~/.ssh/authorized_keys' < /root/.replay/key.pub"
+  },
+  {
+   "at": 60,
+   "source": "intruder.0",
+   "label": "log in with the password and read the marker file",
+   "measure": "marker_reads",
+   "timeout": 45,
+   "run": "SSHPASS='{secret:password}' sshpass -e ssh -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o PubkeyAuthentication=no -o PreferredAuthentications=password -o NumberOfPasswordPrompts=1 {user}@{target} 'cat ~/{marker}' > /dev/null"
+  },
+  {
+   "at": 180,
+   "source": "intruder.0",
+   "label": "log in with the password and read the marker file",
+   "measure": "marker_reads",
+   "timeout": 45,
+   "run": "SSHPASS='{secret:password}' sshpass -e ssh -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o PubkeyAuthentication=no -o PreferredAuthentications=password -o NumberOfPasswordPrompts=1 {user}@{target} 'cat ~/{marker}' > /dev/null"
+  },
+  {
+   "at": 300,
+   "source": "intruder.0",
+   "label": "log in with the password and read the marker file",
+   "measure": "marker_reads",
+   "timeout": 45,
+   "run": "SSHPASS='{secret:password}' sshpass -e ssh -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o PubkeyAuthentication=no -o PreferredAuthentications=password -o NumberOfPasswordPrompts=1 {user}@{target} 'cat ~/{marker}' > /dev/null"
+  },
+  {
+   "at": 420,
+   "source": "intruder.0",
+   "label": "log in with the password and read the marker file",
+   "measure": "marker_reads",
+   "timeout": 45,
+   "run": "SSHPASS='{secret:password}' sshpass -e ssh -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o PubkeyAuthentication=no -o PreferredAuthentications=password -o NumberOfPasswordPrompts=1 {user}@{target} 'cat ~/{marker}' > /dev/null"
+  },
+  {
+   "at": 540,
+   "source": "intruder.0",
+   "label": "log in with the password and read the marker file",
+   "measure": "marker_reads",
+   "timeout": 45,
+   "run": "SSHPASS='{secret:password}' sshpass -e ssh -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o PubkeyAuthentication=no -o PreferredAuthentications=password -o NumberOfPasswordPrompts=1 {user}@{target} 'cat ~/{marker}' > /dev/null"
+  },
+  {
+   "at": 660,
+   "source": "intruder.0",
+   "label": "log in with the password and read the marker file",
+   "measure": "marker_reads",
+   "timeout": 45,
+   "run": "SSHPASS='{secret:password}' sshpass -e ssh -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o PubkeyAuthentication=no -o PreferredAuthentications=password -o NumberOfPasswordPrompts=1 {user}@{target} 'cat ~/{marker}' > /dev/null"
+  },
+  {
+   "at": 660,
+   "source": "intruder.0",
+   "label": "log in with the second key and read the marker file",
+   "measure": "marker_reads",
+   "timeout": 45,
+   "run": "ssh -i /root/.replay/key -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no {user}@{target} 'cat ~/{marker}' > /dev/null"
+  },
+  {
+   "at": 780,
+   "source": "intruder.0",
+   "label": "log in with the password and read the marker file",
+   "measure": "marker_reads",
+   "timeout": 45,
+   "run": "SSHPASS='{secret:password}' sshpass -e ssh -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o PubkeyAuthentication=no -o PreferredAuthentications=password -o NumberOfPasswordPrompts=1 {user}@{target} 'cat ~/{marker}' > /dev/null"
+  },
+  {
+   "at": 780,
+   "source": "intruder.0",
+   "label": "log in with the second key and read the marker file",
+   "measure": "marker_reads",
+   "timeout": 45,
+   "run": "ssh -i /root/.replay/key -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no {user}@{target} 'cat ~/{marker}' > /dev/null"
+  },
+  {
+   "at": 900,
+   "source": "intruder.0",
+   "label": "log in with the password and read the marker file",
+   "measure": "marker_reads",
+   "timeout": 45,
+   "run": "SSHPASS='{secret:password}' sshpass -e ssh -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o PubkeyAuthentication=no -o PreferredAuthentications=password -o NumberOfPasswordPrompts=1 {user}@{target} 'cat ~/{marker}' > /dev/null"
+  },
+  {
+   "at": 900,
+   "source": "intruder.0",
+   "label": "log in with the second key and read the marker file",
+   "measure": "marker_reads",
+   "timeout": 45,
+   "run": "ssh -i /root/.replay/key -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no {user}@{target} 'cat ~/{marker}' > /dev/null"
+  },
+  {
+   "at": 1020,
+   "source": "intruder.0",
+   "label": "log in with the password and read the marker file",
+   "measure": "marker_reads",
+   "timeout": 45,
+   "run": "SSHPASS='{secret:password}' sshpass -e ssh -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o PubkeyAuthentication=no -o PreferredAuthentications=password -o NumberOfPasswordPrompts=1 {user}@{target} 'cat ~/{marker}' > /dev/null"
+  },
+  {
+   "at": 1020,
+   "source": "intruder.0",
+   "label": "log in with the second key and read the marker file",
+   "measure": "marker_reads",
+   "timeout": 45,
+   "run": "ssh -i /root/.replay/key -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no {user}@{target} 'cat ~/{marker}' > /dev/null"
+  },
+  {
+   "at": 1140,
+   "source": "intruder.0",
+   "label": "log in with the password and read the marker file",
+   "measure": "marker_reads",
+   "timeout": 45,
+   "run": "SSHPASS='{secret:password}' sshpass -e ssh -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o PubkeyAuthentication=no -o PreferredAuthentications=password -o NumberOfPasswordPrompts=1 {user}@{target} 'cat ~/{marker}' > /dev/null"
+  },
+  {
+   "at": 1140,
+   "source": "intruder.0",
+   "label": "log in with the second key and read the marker file",
+   "measure": "marker_reads",
+   "timeout": 45,
+   "run": "ssh -i /root/.replay/key -b {src} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -o LogLevel=ERROR -o BatchMode=yes -o IdentitiesOnly=yes -o PasswordAuthentication=no {user}@{target} 'cat ~/{marker}' > /dev/null"
+  }
+ ]
+}

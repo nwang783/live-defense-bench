@@ -1,0 +1,10 @@
+#!/bin/sh
+# Dump the shop database and push it to the offsite box (Hetzner storage box, Maria's account).
+set -u
+STAMP=$(date +%Y%m%d-%H%M)
+mkdir -p /var/backups/larkspur
+mysqldump --single-transaction wordpress | gzip > /var/backups/larkspur/wordpress-$STAMP.sql.gz
+ls -1t /var/backups/larkspur/*.sql.gz | tail -n +25 | xargs -r rm -f
+echo "$(date -Is) dump ok wordpress-$STAMP.sql.gz"
+rsync -az -e "ssh -F /root/.ssh/config" /var/backups/larkspur/ backup:web-01/ \
+  && echo "$(date -Is) offsite ok" || echo "$(date -Is) offsite FAILED (exit $?)"
