@@ -157,7 +157,7 @@ GPT-6 Sol ran with the provider's cyber access program, and every other model ra
 One cell has a hand correction: GPT-6 Astra, S3, seed 26 is counted as solved, because the grader's extra-file
 check failed it on a text match (see Known issues, item 4). The CSV marks this row in its `note` column.
 
-The cleaned transcripts, notes and reports of all 120 runs are published separately: <link to come>.
+The cleaned transcripts, notes and reports of all 120 runs are published separately: https://github.com/nwang783/live-defense-bench-runs
 
 Source: tag `bench-run-2.2` of the private development repository. This public repository starts with a fresh
 history.
